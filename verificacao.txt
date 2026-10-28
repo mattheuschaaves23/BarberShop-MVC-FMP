@@ -1,0 +1,6 @@
+Verificação executada em 28/10/2026
+Ambiente: JDK 21.0.7, NetBeans 26, Java com Ant.
+ant clean jar: BUILD SUCCESSFUL, sem avisos.
+VerificarModelos: 53 verificações aprovadas.
+VerificarTelas: 48 verificações de telas e recursos aprovadas.
+Depuração real no NetBeans: parada na linha 15 de Main, após os cinco construtores. Evidências no vídeo anexado ao Classroom.

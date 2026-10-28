@@ -1,0 +1,1 @@
+AbsoluteLayout.jar: distribuição oficial Apache NetBeans IDE 26, java/modules/ext/AbsoluteLayout.jar. Origem: https://archive.apache.org/dist/netbeans/netbeans/26/netbeans-26-bin.zip. Consulte META-INF no JAR para os avisos e a licença da biblioteca.
