@@ -18,7 +18,7 @@ public class Main {
         System.out.println(usuario);
         System.out.println(clienteCompleto);
         System.out.println(usuarioCompleto);
-        System.out.println("Descrição: " + servico.getDescricao() + " | Valor: " + servico.getValor());
+        System.out.println("Descricao: " + servico.getDescricao() + " | Valor: " + servico.getValor());
         if (args.length == 0 || !"--model-only".equals(args[0])) {
             Ui.iniciar(() -> new Login().setVisible(true));
         }
