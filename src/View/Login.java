@@ -1,9 +1,17 @@
 package View;
+
+import Controller.LoginController;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
 /** Tela Swing editável pelo GUI Builder; AbsoluteLayout solicitado no roteiro. */
 public class Login extends javax.swing.JFrame {
+    private final LoginController controller;
+
     public Login() {
         initComponents();
         Ui.tema(this);
+        controller = new LoginController(this);
         configurarNavegacao();
     }
     @SuppressWarnings({"unchecked", "serial"})
@@ -32,11 +40,11 @@ public class Login extends javax.swing.JFrame {
         txtSenha.setName("txtSenha");
         getContentPane().add(txtSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 300, 280, 38));
         btnEntrar = new javax.swing.JButton();
-        btnEntrar.setText("Abrir demonstração");
+        btnEntrar.setText("Entrar");
         btnEntrar.setName("btnEntrar");
         getContentPane().add(btnEntrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 370, 280, 42));
         lblAviso = new javax.swing.JLabel();
-        lblAviso.setText("Protótipo visual • sem autenticação");
+        lblAviso.setText("Demonstração • validação pelo DAO");
         lblAviso.setName("lblAviso");
         getContentPane().add(lblAviso, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 440, 320, 30));
         lblPainelLogin = new javax.swing.JLabel();
@@ -51,8 +59,14 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     private void configurarNavegacao() {
         getRootPane().setDefaultButton(btnEntrar);
-        btnEntrar.addActionListener(e -> { txtSenha.setText(""); new MenuPrincipal().setVisible(true); dispose(); });
+        btnEntrar.addActionListener(e -> controller.entrarNoSistema());
     }
+
+    public JTextField getTxtUsuario() { return txtUsuario; }
+    public JPasswordField getTxtSenha() { return txtSenha; }
+    public void setTxtUsuario(String usuario) { txtUsuario.setText(usuario); }
+    public void setTxtSenha(String senha) { txtSenha.setText(senha); }
+    public void mostrarMensagem(String mensagem) { lblAviso.setText(mensagem); }
     public static void main(String[] args) { Ui.iniciar(() -> Ui.abrir(new Login())); }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lblTitulo;

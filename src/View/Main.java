@@ -1,26 +1,35 @@
 package View;
+
+import Model.Agendamento;
 import Model.Cliente;
+import Model.Datas;
+import Model.Pessoa;
 import Model.Servico;
 import Model.Usuario;
-import java.util.Date;
 
-/** Executar ou depurar este arquivo; colocar breakpoint na primeira impressão. */
 public class Main {
     public static void main(String[] args) {
-        Servico servico = new Servico(1, "Barba", 30.0f);
-        Cliente cliente = new Cliente(1, "Jorge", 'M', "(00) 00000-0000", "Rua Exemplo, 100");
-        Usuario usuario = new Usuario(1, "barbeiro", "senha-ficticia");
-        Cliente clienteCompleto = new Cliente(2, "Ana", 'F', new Date(0), "(00) 00000-0000", "ana@example.test", "RG-TESTE", "Rua Exemplo, 200", "00000-000");
-        Usuario usuarioCompleto = new Usuario(2, "recepcao", "senha-ficticia", 1, 'F', new Date(0), "(00) 00000-0000", "recepcao@example.test", "RG-TESTE", "Rua Exemplo, 300");
-        System.out.println("=== BarberShop: teste dos modelos ==="); // BREAKPOINT: inspecionar os cinco objetos
-        System.out.println(servico);
-        System.out.println(cliente);
-        System.out.println(usuario);
-        System.out.println(clienteCompleto);
-        System.out.println(usuarioCompleto);
-        System.out.println("Descricao: " + servico.getDescricao() + " | Valor: " + servico.getValor());
+        Cliente cliente = new Cliente(1, "Jorge", 'M', "14/06/1997", "0000-0000",
+                "jorge@example.test", "RG-DEMO-01", "Rua Exemplo, 100", "00000-000");
+        Usuario usuario = new Usuario(1, "barbeiro", 'M', "16/08/1995", "0000-0000",
+                "barbeiro@example.test", "RG-DEMO-03", "demo123", "administrador");
+        Servico servico = new Servico(1, "Corte", 35f);
+        Agendamento agendamento = new Agendamento(1, cliente, servico, servico.getValor(),
+                "04/11/2026", "09:00", "Atendimento de demonstração");
+
+        System.out.println("=== Aula 12 | Modelos ==="); // Breakpoint: modelos inicializados.
+        exibirHeranca(cliente);
+        exibirHeranca(usuario);
+        System.out.println(agendamento);
+        System.out.println("Tipo da data: " + agendamento.getData().getClass().getName());
         if (args.length == 0 || !"--model-only".equals(args[0])) {
-            Ui.iniciar(() -> new Login().setVisible(true));
+            Ui.iniciar(() -> Ui.abrir(new Login()));
         }
+    }
+
+    private static void exibirHeranca(Pessoa pessoa) {
+        System.out.printf("%s extends %s | %s | nascimento: %s%n", pessoa.getClass().getSimpleName(),
+                pessoa.getClass().getSuperclass().getSimpleName(), pessoa.getNome(),
+                Datas.exibir(pessoa.getDataNascimento(), "dd/MM/yyyy"));
     }
 }

@@ -10,6 +10,7 @@ public class Servico {
         this.descricao = descricao;
         this.valor = valor;
     }
+    public int getId() { return id; }
     public String getDescricao() { return descricao; }
     public void setDescricao(String descricao) { this.descricao = descricao; }
     public float getValor() { return valor; }

@@ -1,0 +1,5 @@
+=== Aula 12 | Modelos ===
+Cliente extends Pessoa | Jorge | nascimento: 14/06/1997
+Usuario extends Pessoa | barbeiro | nascimento: 16/08/1995
+Agendamento 1 | Jorge | Corte | 04/11/2026 09:00 | R$ 35.0
+Tipo da data: java.util.Date

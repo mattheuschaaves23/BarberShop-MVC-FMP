@@ -1,6 +1,22 @@
 package View;
+
+import Model.Agendamento;
+import Model.Cliente;
+import Model.Datas;
+import Model.Servico;
+import Model.DAO.AgendamentoDAO;
+import Model.DAO.ClienteDAO;
+import Model.DAO.ServicoDAO;
+import java.util.Locale;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /** Tela Swing editável pelo GUI Builder; AbsoluteLayout solicitado no roteiro. */
 public class Agenda extends javax.swing.JFrame {
+    private final AgendamentoDAO dao = new AgendamentoDAO();
+
     public Agenda() {
         initComponents();
         Ui.tema(this);
@@ -18,7 +34,7 @@ public class Agenda extends javax.swing.JFrame {
         lblTitulo.setName("lblTitulo");
         getContentPane().add(lblTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(45, 25, 780, 42));
         lblNome = new javax.swing.JLabel();
-        lblNome.setText("Nome / título");
+        lblNome.setText("Cliente selecionado");
         lblNome.setName("lblNome");
         getContentPane().add(lblNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 180, 25));
         txtNome = new javax.swing.JTextField();
@@ -80,12 +96,12 @@ public class Agenda extends javax.swing.JFrame {
         btnAgendar.setName("btnAgendar");
         getContentPane().add(btnAgendar, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 305, 195, 45));
         lblTabela = new javax.swing.JLabel();
-        lblTabela.setText("Exemplos fictícios • sem gravação nesta etapa");
+        lblTabela.setText("Dados de demonstração • registros em memória");
         lblTabela.setName("lblTabela");
         getContentPane().add(lblTabela, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 390, 800, 25));
         scrollAgenda = new javax.swing.JScrollPane();
         tblAgenda = new javax.swing.JTable();
-        tblAgenda.setModel(new javax.swing.table.DefaultTableModel(new Object[][] { {"1","Exemplo de corte","Jorge","Corte","30/10/2026","09:00","35,00"} }, new String[] {"ID","Nome","Cliente","Serviço","Data","Hora","Valor (R$)"}) { @Override public boolean isCellEditable(int r,int col) { return false; } });
+        tblAgenda.setModel(new javax.swing.table.DefaultTableModel(new Object[0][7], new String[] {"ID","Observação","Cliente","Serviço","Data","Hora","Valor (R$)"}) { @Override public boolean isCellEditable(int r,int col) { return false; } });
         tblAgenda.setRowHeight(28); tblAgenda.setAutoCreateRowSorter(true);
         scrollAgenda.setViewportView(tblAgenda);
         scrollAgenda.setName("scrollAgenda");
@@ -100,12 +116,73 @@ public class Agenda extends javax.swing.JFrame {
         getContentPane().add(lblFundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 620));
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    @SuppressWarnings("unchecked")
     private void configurarNavegacao() {
-        btnAgendar.addActionListener(e -> {
-            btnAgendar.setSelected(false);
-            javax.swing.JOptionPane.showMessageDialog(this,"Protótipo visual: autenticação, regras de agendamento e persistência pertencem à futura camada Controller. Nenhum registro foi gravado.");
+        cmbCliente.setModel(new DefaultComboBoxModel<>(new ClienteDAO().selectAll().toArray(Cliente[]::new)));
+        cmbServico.setModel(new DefaultComboBoxModel<>(new ServicoDAO().selectAll().toArray(Servico[]::new)));
+        cmbServico.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> lista, Object valor,
+                    int indice, boolean selecionado, boolean foco) {
+                return super.getListCellRendererComponent(lista, valor instanceof Servico servico
+                        ? servico.getDescricao() : valor, indice, selecionado, foco);
+            }
         });
+        txtNome.setEditable(false);
+        txtValor.setEditable(false);
+        txtData.setText("");
+        txtHora.setText("");
+        txtData.setToolTipText("dd/MM/aaaa");
+        txtHora.setToolTipText("HH:mm");
+        cmbCliente.addActionListener(e -> preencherSelecao());
+        cmbServico.addActionListener(e -> preencherSelecao());
+        btnAgendar.addActionListener(e -> salvar());
+        preencherSelecao();
+        atualizarTabela();
+        tblAgenda.getColumnModel().getColumn(0).setPreferredWidth(42);
+        tblAgenda.getColumnModel().getColumn(1).setPreferredWidth(210);
     }
+
+    private void preencherSelecao() {
+        Cliente cliente = (Cliente) cmbCliente.getSelectedItem();
+        Servico servico = (Servico) cmbServico.getSelectedItem();
+        txtNome.setText(cliente == null ? "" : cliente.getNome());
+        txtValor.setText(servico == null ? "" : moeda(servico.getValor()));
+    }
+
+    private void salvar() {
+        btnAgendar.setSelected(false);
+        Cliente cliente = (Cliente) cmbCliente.getSelectedItem();
+        Servico servico = (Servico) cmbServico.getSelectedItem();
+        if (cliente == null || servico == null) {
+            JOptionPane.showMessageDialog(this, "Selecione o cliente e o serviço.");
+            return;
+        }
+        try {
+            Agendamento item = new Agendamento(0, cliente, servico, servico.getValor(),
+                    txtData.getText().trim(), txtHora.getText().trim(), txtObservacoes.getText().trim());
+            dao.insert(item);
+            atualizarTabela();
+            txtData.setText("");
+            txtHora.setText("");
+            txtObservacoes.setText("");
+            txtData.requestFocusInWindow();
+        } catch (IllegalArgumentException erro) {
+            JOptionPane.showMessageDialog(this, erro.getMessage(), "Confira o agendamento", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void atualizarTabela() {
+        DefaultTableModel tabela = (DefaultTableModel) tblAgenda.getModel();
+        tabela.setRowCount(0);
+        for (Agendamento item : dao.selectAll()) {
+            tabela.addRow(new Object[]{item.getId(), item.getObservacao(), item.getCliente().getNome(),
+                item.getServico().getDescricao(), Datas.exibir(item.getData(), "dd/MM/yyyy"),
+                item.getHora(), moeda(item.getValor())});
+        }
+    }
+
+    private static String moeda(float valor) { return String.format(Locale.forLanguageTag("pt-BR"), "%.2f", valor); }
     public static void main(String[] args) { Ui.iniciar(() -> Ui.abrir(new Agenda())); }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lblTitulo;

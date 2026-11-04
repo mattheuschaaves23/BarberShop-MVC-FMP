@@ -1,0 +1,51 @@
+Picked up JAVA_TOOL_OPTIONS: -Duser.language=en -Duser.country=US -Dfile.encoding=UTF-8
+Initializing jdb ...
+> 
+>>> stop at View.Main:20
+Deferring breakpoint View.Main:20.
+It will be set after the class is loaded.
+> 
+>>> run
+run View.Main --model-only
+Picked up JAVA_TOOL_OPTIONS: -Duser.language=en -Duser.country=US -Dfile.encoding=UTF-8
+Set uncaught java.lang.Throwable
+Set deferred uncaught java.lang.Throwable
+> 
+VM Started: Set deferred breakpoint View.Main:20
+
+Breakpoint hit: "thread=main", View.Main.main(), line=20 bci=85
+20            System.out.println("=== Aula 12 | Modelos ==="); // Breakpoint: modelos inicializados.
+
+main[1]
+>>> locals
+ Method arguments:
+args = instance of java.lang.String[1] (id=937)
+Local variables:
+cliente = instance of Model.Cliente(id=938)
+usuario = instance of Model.Usuario(id=939)
+servico = instance of Model.Servico(id=940)
+agendamento = instance of Model.Agendamento(id=941)
+main[1]
+>>> print cliente.getDataNascimento()
+  cliente.getDataNascimento() = "Sat Jun 14 00:00:00 BRT 1997"
+main[1]
+>>> print usuario.getDataNascimento()
+  usuario.getDataNascimento() = "Wed Aug 16 00:00:00 BRT 1995"
+main[1]
+>>> print agendamento.getData()
+  agendamento.getData() = "Wed Nov 04 09:00:00 BRT 2026"
+main[1]
+>>> print agendamento.getHora()
+  agendamento.getHora() = "09:00"
+main[1]
+>>> print cliente.getClass().getSuperclass().getName()
+  cliente.getClass().getSuperclass().getName() = "Model.Pessoa"
+main[1]
+>>> cont
+ > === Aula 12 | Modelos ===
+Cliente extends Pessoa | Jorge | nascimento: 14/06/1997
+Usuario extends Pessoa | barbeiro | nascimento: 16/08/1995
+Agendamento 1 | Jorge | Corte | 04/11/2026 09:00 | R$ 35.0
+Tipo da data: java.util.Date
+
+The application exited
