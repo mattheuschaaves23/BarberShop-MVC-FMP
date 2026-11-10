@@ -1,4 +1,5 @@
-JDK 21. Compilação e JAR Ant concluídos. Dados fictícios.
+JDK 21. Ant clean jar concluído em 09/11/2026.
 25 verificações de modelos aprovadas.
 48 verificações de telas e recursos aprovadas.
 22 verificações de herança, datas, DAO e navegação aprovadas.
+14 verificações da Aula 13 aprovadas.

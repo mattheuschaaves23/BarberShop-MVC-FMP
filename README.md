@@ -31,3 +31,9 @@ Rafael Novo da Rosa. **Desafio Prático da Aula 12**, pacote DAO e fontes de Log
 ## Evidências da entrega
 
 A demonstração usa capturas reais das telas e trechos da transcrição de uma sessão de depuração jdb. As saídas da Main e do depurador estão em evidencias/. Os resultados de testes estão em verificacao.txt.
+
+## Incremento da Aula 13 — 09/11/2026
+
+AgendaController consulta AgendamentoDAO, ClienteDAO e ServicoDAO. AgendaHelper implementa IHelper<Agendamento> e preenche a JTable e os combos com os objetos retornados pelos DAOs. Ao selecionar um serviço, seu valor aparece automaticamente. Agendar obtém o modelo, grava no DAO, atualiza a tabela e limpa os campos. A camada Banco mantém os registros em memória durante o processo.
+
+A demonstração entregue apresenta uma sequência legendada de capturas reais, incluindo o novo atendimento de Ana para Barba e a atualização da tabela. Os testes da Aula 13 estão em test/VerificarAula13.java.
